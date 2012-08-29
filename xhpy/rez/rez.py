@@ -26,6 +26,9 @@ class HTMLHeadNode(html.HTMLNode):
             else:
                 assert False, "Got bad extension: " + basename
             children.append(html.StringNode("\n"))
+
+        for script in self.request.get_scripts():
+            children.append(<?html <script type="text/javascript">${script}</script> ?>)
         # since we are adding children at render time, they must be composed before rendering
         # the only reason we are doing this is that we need the entire tree to be traversed to populate request
         for child in children:
@@ -37,6 +40,7 @@ html.HTML.head = HTMLHeadNode
 class Request(object):
     def __init__(self):
         self.statics = orderedset.OrderedSet()
+        self.scripts = []
 
     def _translate_path(self, path):
         return path
@@ -53,8 +57,14 @@ class Request(object):
         self._preprocess_requires(path)
         self.statics.add(self._translate_path(path))
 
+    def require_script(self, script):
+        self.scripts.append(script)
+
     def get_statics(self):
         return self.statics
+
+    def get_scripts(self):
+        return self.scripts
 
 def render(node, translate_path=lambda path: path):
     request = Request()

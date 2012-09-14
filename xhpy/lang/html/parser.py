@@ -95,16 +95,7 @@ class HTMLEvaluator(HTMLParser.HTMLParser):
         self.stack[-1][2].append(ast.HTMLPINode(data))
 
     def evaluate_attrs(self, attrs):
-        return dict([(k, self.flatten_attr(self.evaluate_expr(v, True))) for (k, v) in attrs])
-
-    def flatten_attr(self, attr):
-        """ attrs should be passed as primitives whenever possible """
-        if not isinstance(attr, ast.BaseNode):
-            return attr
-        if len(attr.__children__) == 1:
-            return self.flatten_attr(attr.__children__[0])
-        if isinstance(attr, ast.StringNode):
-            return attr.value
+        return dict([(k, self.evaluate_expr(v, True)) for (k, v) in attrs])
 
     def evaluate_expr(self, expr, allow_native=False):
         # preparse the text
@@ -128,7 +119,7 @@ class HTMLEvaluator(HTMLParser.HTMLParser):
             # this allows us to pass through attributes without converting them to xhp
             return children[1]
         return ast.BaseNode()[children]
-
+        
     @classmethod
     def evaluate(cls, env, code):
         e = cls(env, code.strip())

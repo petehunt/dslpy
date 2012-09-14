@@ -8,7 +8,10 @@ class JSMacro(object):
     @staticmethod
     def evaluate(env, code):
         def _sub(match):
-            return json.dumps(eval(match.group("id"), env))
+            try:
+                return json.dumps(env[match.group("id")])
+            except KeyError:
+                raise KeyError, "Invalid token: %s" % match.group("id")
         return macros.RE_INLINE.sub(_sub, code)
-
+        
 macros.MacroManager.get_instance().register(JSMacro)

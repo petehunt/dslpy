@@ -1,5 +1,5 @@
-from xhpy import macros
-from xhpy.lang.repr import parser
+from dslpy import macros
+from dslpy.lang.repr import parser
 
 class ShMacro(parser.ReprMacro):
     MACRO_TYPE = 'sh'

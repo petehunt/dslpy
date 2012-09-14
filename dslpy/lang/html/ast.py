@@ -4,7 +4,7 @@
 import cgi
 import gettext
 
-from xhpy import macros
+from dslpy import macros
 
 class AlreadyComposedException(Exception):
     ''' you can only compose once '''

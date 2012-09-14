@@ -1,5 +1,5 @@
 import orderedset
-from xhpy.lang import html
+from dslpy.lang import html
 
 import urlparse
 import re

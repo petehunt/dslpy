@@ -1,28 +1,28 @@
-== xhpy overview ==
+== dslpy overview ==
 
 This framework was extracted from best practices at Facebook and has been thouroughly
 thought out and used in production in a mobile/www geolocation app.
 
-xhpy provides the following capabilities:
+dslpy provides the following capabilities:
   * Domain-specific language syntax: using <?lang ... ?>, you can insert arbitrary languages inline
     with Python and treat them as expressions. This can be extended with plugins known as macros.
   * A complete implementation of HTML syntax and generation that allows for modular code reuse
   * Partial implementations of other languages (js, css, shell, sql)
-  * A dependency-management system for including files (xhpy.rez)
+  * A dependency-management system for including files (dslpy.rez)
 
 I chose to use the <?html ?> syntax because it's arguably cleaner and, more importantly,
 forbids string concatenation. With a function call one could still override the escaping
 using raw string concatenation; not so with the custom syntax. I understand that this is
 controversial; with a simple script we can convert this to use strings or external files.
 
-=== xhpy DSL syntax ===
+=== dslpy DSL syntax ===
 
-To enable the import hook to allow this syntax, you must call xhpy.macros.install().
+To enable the import hook to allow this syntax, you must call dslpy.macros.install().
 
-You can create your own macros, too. See a simple example at xhpy.lang.repr.
+You can create your own macros, too. See a simple example at dslpy.lang.repr.
 
-=== xhpy HTML tutorial ===
-Use the <?html ... ?> to insert xhpy markup. When inserting a tag, xhpy will look at the
+=== dslpy HTML tutorial ===
+Use the <?html ... ?> to insert dslpy markup. When inserting a tag, dslpy will look at the
 current environment to see if there is a *Node class that exists. i.e. this piece of
 code:
 {{{
@@ -55,37 +55,37 @@ Emits:
 <p>My name is &lt;b&gt;pete&lt;/b&gt; and I am <b>cool</b></p>
 }}}
 
-=== xhpy internals ===
+=== dslpy internals ===
 
-Let's dive into the specifics of how xhpy HTML works. You don't need to know the details
-in order to work with xhpy; skip to the next section for more hands-on examples.
+Let's dive into the specifics of how dslpy HTML works. You don't need to know the details
+in order to work with dslpy; skip to the next section for more hands-on examples.
 
-All custom components extend xhpy.lang.html.BaseNode. This class has a constructor
+All custom components extend dslpy.lang.html.BaseNode. This class has a constructor
 that takes arbitrary keyword arguments (i.e. <MyComponent x="test" /> will pass x as a
 keyword argument). You must call the superclass constructor if you override it. The base
 class has the following fun stuff:
   * add_child(): add a child
   * __children__: list of all children added to the node.
 
-When you render an xhpy tree, you first need to compose each node. Each node has a
-__compose__() method that returns a new xhpy node. This return value will effectively
+When you render an dslpy tree, you first need to compose each node. Each node has a
+__compose__() method that returns a new dslpy node. This return value will effectively
 replace this node in the document. You can imagine writing a custom component that returns
 the basic HTML to render itself using this method.
 
 However, if your custom component includes another custom component, it needs to compose
-itself too. So xhpy will keep calling __compose__() on the tree until all that is left
-is basic HTML. It knows when to stop because each xhpy node can be composed only once, and
+itself too. So dslpy will keep calling __compose__() on the tree until all that is left
+is basic HTML. It knows when to stop because each dslpy node can be composed only once, and
 since all the basic HTML nodes just return self from __compose__(), it knows to stop when
 all the nodes have already been composed.
 
 Most of the time when writing a custom component, you'll want to compose your children.
-Just call xhpy.lang.html.BaseNode.__compose__() and it will replace __children__ with
+Just call dslpy.lang.html.BaseNode.__compose__() and it will replace __children__ with
 their fully composed versions.
 
 === A super basic example ===
 
 {{{
-from xhpy.lang import html
+from dslpy.lang import html
 class HeaderNode(html.BaseNode):
   def __init__(self, title):
     html.BaseNode.__init__(self) # must call parent constructor always
@@ -134,7 +134,7 @@ using add_child() and add_attribute() on HTML nodes to modify the tree easily.
 
 Different subcomponents will require different css and js files to work. We only want to
 include them once, sometimes we want to use cache busting, and we don't want to have to
-centrally manage the dependencies at the top-level. xhpy.rez takes care of this.
+centrally manage the dependencies at the top-level. dslpy.rez takes care of this.
 
 You noticed the request argument to __compose__(). You can call require_static('file.css')
 to require a static file be referenced in the head. You can override how this path is
@@ -150,8 +150,8 @@ for you.
 
 Example based on above:
 {{{
-from xhpy.lang import html
-from xhpy import rez
+from dslpy.lang import html
+from dslpy import rez
 class HeaderNode(html.BaseNode):
   def __init__(self, title):
     html.BaseNode.__init__(self) # must call parent constructor always

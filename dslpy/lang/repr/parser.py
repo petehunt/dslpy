@@ -1,4 +1,4 @@
-from xhpy import macros
+from dslpy import macros
 
 class ReprMacro(object):
     @staticmethod

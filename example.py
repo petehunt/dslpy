@@ -1,5 +1,5 @@
-from xhpy.lang import html, js
-from xhpy import rez
+from dslpy.lang import html, js
+from dslpy import rez
 
 class HeaderNode(html.BaseNode):
   def __init__(self, title):

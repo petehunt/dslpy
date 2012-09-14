@@ -1,8 +1,8 @@
 import HTMLParser
 import re
 import htmlentitydefs
-from xhpy.lang.html import ast
-from xhpy import macros
+from dslpy.lang.html import ast
+from dslpy import macros
 
 RE_STARTTAG = re.compile(r"^<([^\s>]+)")
 

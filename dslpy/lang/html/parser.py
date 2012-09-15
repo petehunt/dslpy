@@ -120,9 +120,9 @@ class HTMLEvaluator(HTMLParser.HTMLParser):
                 # here, but that might be considered bad practice.
                 try:
                     children.append(eval(token, self.env))
-                except KeyError:
-                    line, col = self.getpos()
-                    raise KeyError, "Invalid token at line %d, character %d of HTML fragment: %s" % (line, col, token)
+                except Exception, e:
+                    raise e
+                    #raise KeyError, "Invalid token at line %d, character %d of HTML fragment: %s" % (line, col, token)
 
         if len(children) == 3 and children[0] == '' and children[2] == '' and allow_native:
             # this allows us to pass through attributes without converting them to xhp

@@ -28,6 +28,7 @@ class HTMLHeadNode(html.HTMLNode):
             children.append(html.StringNode("\n"))
 
         for script in self.request.get_scripts():
+            script = html.XSSNode(script)
             children.append(<?html <script type="text/javascript">${script}</script> ?>)
         # since we are adding children at render time, they must be composed before rendering
         # the only reason we are doing this is that we need the entire tree to be traversed to populate request
@@ -46,8 +47,12 @@ class Request(object):
         return path
 
     def _preprocess_requires(self, path):
-        with open(path, "r") as f:
-            requires = RE_REQUIRE.findall(f.read())
+        requires = []
+        try:
+            with open(path, "r") as f:
+                requires = RE_REQUIRE.findall(f.read())
+        except:
+            pass
         for filename, in requires:
             if filename[0] == '"' or filename[0] == "'":
                 filename = filename[1:-1] # strip quotes

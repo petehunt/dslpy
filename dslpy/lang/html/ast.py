@@ -79,6 +79,12 @@ class BaseNode(ProtoNode):
         # TODO: does it make sense to pass the request thru here and not just in __compose__()?
         return "".join(child.__render__() for child in self.__children__)
 
+class Node(BaseNode):
+    # use this!
+    def __init__(self, **attrs):
+        BaseNode.__init__(self)
+        self.attrs = attrs
+
 class StringNode(BaseNode):
     def __init__(self, value):
         BaseNode.__init__(self)
@@ -177,7 +183,7 @@ HTML = HTMLNodeFactory()
 # a few browsers get confused when you do the short-close syntax. WHY? i don't know!
 # i.e. <script />
 class HTMLNoShortNode(HTMLNode):
-    def __init__(self, *args, **kwargs): 
+    def __init__(self, *args, **kwargs):
         HTMLNode.__init__(self, *args, **kwargs)
     def __compose__(self, request):
         if not self.__children__:
